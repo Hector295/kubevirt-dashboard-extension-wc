@@ -1,0 +1,62 @@
+{
+  "name": "suse-edge-dashboard-extensions",
+  "version": "303.0.2+up1.3.1",
+  "license": "Apache-2.0",
+  "private": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@novnc/novnc": "^1.4.0",
+    "@rancher/components": "^0.3.0-alpha.1",
+    "@rancher/shell": "^3.0.2",
+    "@types/lodash": "4.14.184",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-search": "^0.15.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "@xterm/addon-webgl": "^0.18.0",
+    "@xterm/xterm": "^5.5.0",
+    "cache-loader": "^4.1.0",
+    "color": "4.2.3",
+    "ip": "2.0.1",
+    "node-polyfill-webpack-plugin": "^3.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "~5.4.0",
+    "@typescript-eslint/parser": "~5.4.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-vue": "^9.17.0",
+    "prettier": "^3.0.3",
+    "vue-eslint-parser": "9.3.2"
+  },
+  "resolutions": {
+    "@types/node": "~20.10.0",
+    "d3-color": "3.1.0",
+    "ejs": "3.1.9",
+    "follow-redirects": "1.15.2",
+    "glob": "7.2.3",
+    "glob-parent": "6.0.2",
+    "json5": "2.2.3",
+    "@types/lodash": "4.17.5",
+    "merge": "2.1.1",
+    "node-forge": "1.3.1",
+    "nth-check": "2.1.1",
+    "qs": "6.11.1",
+    "roarr": "7.0.4",
+    "semver": "7.5.4",
+    "@vue/cli-service/html-webpack-plugin": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=dev ./node_modules/.bin/vue-cli-service serve",
+    "build": "./node_modules/.bin/vue-cli-service build",
+    "clean": "./node_modules/@rancher/shell/scripts/clean",
+    "build-pkg": "./node_modules/@rancher/shell/scripts/build-pkg.sh",
+    "serve-pkgs": "./node_modules/@rancher/shell/scripts/serve-pkgs",
+    "publish-pkgs": "./node_modules/@rancher/shell/scripts/extension/publish",
+    "parse-tag-name": "./node_modules/@rancher/shell/scripts/extension/parse-tag-name"
+  }
+}
