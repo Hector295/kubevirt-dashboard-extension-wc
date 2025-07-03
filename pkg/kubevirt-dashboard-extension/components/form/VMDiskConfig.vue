@@ -39,6 +39,21 @@ export default {
         { label: 'EmptyDir', value: 'emptyDir' },
         { label: 'Cloud-Init', value: 'cloudInit' },
       ],
+      containerDiskImages: [
+        { label: 'Select a pre-built image...', value: '' },
+        { label: 'CirrOS Demo', value: 'quay.io/kubevirt/cirros-container-disk-demo:latest' },
+        {
+          label: 'Fedora Cloud',
+          value: 'quay.io/kubevirt/fedora-cloud-container-disk-demo:latest',
+        },
+        { label: 'Alpine Linux', value: 'quay.io/kubevirt/alpine-container-disk-demo:latest' },
+        { label: 'Ubuntu Cloud', value: 'quay.io/containerdisks/ubuntu:22.04' },
+        { label: 'CentOS Stream', value: 'quay.io/containerdisks/centos-stream:9' },
+        { label: 'Debian', value: 'quay.io/containerdisks/debian:12' },
+        { label: 'Rocky Linux', value: 'quay.io/containerdisks/rockylinux:9' },
+        { label: 'openSUSE Leap', value: 'quay.io/containerdisks/opensuse:15.5' },
+        { label: 'Custom Image', value: 'custom' },
+      ],
       localDiskConfigs: [],
       loading: false,
     };
@@ -135,6 +150,13 @@ export default {
         });
       });
       return options;
+    },
+    containerImageOptions() {
+      return this.containerDiskImages.map((img) => ({
+        label: img.label,
+        value: img.value,
+        description: img.description,
+      }));
     },
   },
 
@@ -239,8 +261,11 @@ export default {
               }
               break;
             case 'secret':
-              if (config.secretName) {
-                volume.secret = { secretName: config.secretName };
+              const imageToUse =
+                config.containerImage === 'custom' ? config.customImage : config.containerImage;
+
+              if (imageToUse) {
+                volume.containerDisk = { image: imageToUse };
                 hasValidSource = true;
               }
               break;
@@ -284,13 +309,12 @@ export default {
 
     updateDiskField(index, field, value) {
       if (this.localDiskConfigs[index]) {
-        // Vue 3 - direct assignment works with reactivity
         this.localDiskConfigs[index][field] = value;
 
-        // Resetear campos relacionados al cambiar tipo
         if (field === 'volumeType') {
           this.localDiskConfigs[index].pvcName = '';
           this.localDiskConfigs[index].containerImage = '';
+          this.localDiskConfigs[index].customImage = '';
           this.localDiskConfigs[index].secretName = '';
           this.localDiskConfigs[index].configMapName = '';
           this.localDiskConfigs[index].size = '';
@@ -309,6 +333,7 @@ export default {
         volumeType: 'pvc',
         pvcName: '',
         containerImage: '',
+        customImage: '',
         secretName: '',
         configMapName: '',
         size: '',
@@ -410,13 +435,39 @@ export default {
 
       <div v-if="disk.volumeType === 'containerDisk'" class="row mb-10">
         <div class="col span-12">
-          <LabeledInput
+          <LabeledSelect
             :mode="mode"
-            v-model:value="localDiskConfigs[index].containerImage"
+            :options="containerDiskImages"
             label="Container Image"
-            placeholder="kubevirt/fedora-cloud-container-disk-demo:latest"
-            @input="(val) => updateDiskField(index, 'containerImage', val)"
+            v-model:value="disk.containerImage"
+            :reduce="(e) => e.value"
+            @update:value="(val) => updateDiskField(index, 'containerImage', val)"
           />
+
+          <!-- Input para imagen cusom -->
+          <div v-if="disk.containerImage === 'custom'" class="mt-10">
+            <LabeledInput
+              :mode="mode"
+              v-model:value="localDiskConfigs[index].customImage"
+              label="Custom Container Image"
+              placeholder="registry.example.com/my-vm-image:latest"
+              @input="(val) => updateDiskField(index, 'customImage', val)"
+            />
+          </div>
+
+          <!-- Mostrar imagen seleccionada -->
+          <div v-if="disk.containerImage && disk.containerImage !== 'custom'" class="mt-5">
+            <div class="selected-image"><strong>Selected:</strong> {{ disk.containerImage }}</div>
+          </div>
+
+          <div
+            v-if="disk.containerImage === 'custom' && localDiskConfigs[index].customImage"
+            class="mt-5"
+          >
+            <div class="selected-image">
+              <strong>Custom:</strong> {{ localDiskConfigs[index].customImage }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -480,7 +531,7 @@ export default {
                 lineWrapping: true,
                 tabSize: 2,
                 indentWithTabs: false,
-                viewportMargin: Infinity
+                viewportMargin: Infinity,
               }"
               @onInput="(val) => updateDiskField(index, 'userData', val)"
               @onReady="() => refreshCodeMirror(index)"
@@ -567,5 +618,21 @@ h4 {
 
 .cloud-init-editor ::v-deep .CodeMirror-sizer {
   min-height: auto !important;
+}
+
+.selected-image {
+  padding: 8px 12px;
+  background-color: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 4px;
+  font-size: 0.9em;
+
+  strong {
+    color: var(--accent-text);
+  }
+}
+
+.mt-10 {
+  margin-top: 10px;
 }
 </style>
