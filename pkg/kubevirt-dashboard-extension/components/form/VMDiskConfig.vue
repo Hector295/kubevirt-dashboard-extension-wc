@@ -412,7 +412,7 @@ export default {
         <div class="col span-12">
           <LabeledInput
             :mode="mode"
-            :value="localDiskConfigs[index].containerImage"
+            v-model:value="localDiskConfigs[index].containerImage"
             label="Container Image"
             placeholder="kubevirt/fedora-cloud-container-disk-demo:latest"
             @input="(val) => updateDiskField(index, 'containerImage', val)"
