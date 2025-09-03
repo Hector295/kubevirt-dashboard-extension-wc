@@ -62,7 +62,9 @@ export default {
     tabErrors() {
       return {
         basic: this.fvGetPathErrors(['metadata.name'])?.length > 0,
-        resources: this.fvGetPathErrors(['spec.template.spec.domain.cpu.cores'])?.length > 0,
+        resources: 
+          this.fvGetPathErrors(['spec.template.spec.domain.cpu.cores'])?.length > 0 ||
+          this.fvGetPathErrors(['spec.template.spec.domain.memory.guest'])?.length > 0,
       };
     },
 
@@ -76,10 +78,20 @@ export default {
 
     vmRunning: {
       get() {
-        return get(this.value, 'spec.running') || false;
+        const runStrategy = get(this.value, 'spec.runStrategy');
+        return runStrategy === 'Always' || runStrategy === 'RerunOnFailure';
       },
       set(newValue) {
-        set(this.value, 'spec.running', newValue);
+        if (newValue) {
+          set(this.value, 'spec.runStrategy', 'Always');
+        } else {
+          set(this.value, 'spec.runStrategy', 'Halted');
+        }
+        // Remove deprecated spec.running if it exists
+        const spec = get(this.value, 'spec') || {};
+        if ('running' in spec) {
+          delete spec.running;
+        }
       },
     },
 
@@ -97,7 +109,8 @@ export default {
         return get(this.value, 'spec.template.spec.domain.cpu.cores') || 1;
       },
       set(newValue) {
-        set(this.value, 'spec.template.spec.domain.cpu.cores', parseInt(newValue));
+        const cpuValue = parseFloat(newValue);
+        set(this.value, 'spec.template.spec.domain.cpu.cores', isNaN(cpuValue) ? 1 : cpuValue);
       },
     },
 
@@ -170,6 +183,7 @@ export default {
               architecture: 'amd64',
               domain: {
                 cpu: { cores: 1 },
+                memory: { guest: '1Gi' },
                 devices: {
                   disks: [],
                   interfaces: [],
@@ -227,6 +241,56 @@ export default {
           set(this.value, 'spec.template.spec.networks', []);
         }
       }
+    },
+
+    fvExtraRules() {
+      return [
+        {
+          path: 'spec.template.spec.domain.cpu.cores',
+          rules: [
+            (v) => {
+              if (!v || v === '' || v === null || v === undefined) {
+                return 'CPU cores is required';
+              }
+              const num = parseFloat(v);
+              if (isNaN(num)) return 'CPU cores must be a valid number';
+              if (num < 0.1) return 'CPU cores must be at least 0.1';
+              if (num > 32) return 'CPU cores cannot exceed 32';
+              return true;
+            },
+          ],
+        },
+        {
+          path: 'spec.template.spec.domain.memory.guest',
+          rules: [
+            (v) => {
+              if (!v || v === '') {
+                return 'Memory is required';
+              }
+              // Validate memory format (number + unit)
+              const memoryRegex = /^(\d+)(Mi|Gi|Ti)$/;
+              if (!memoryRegex.test(v)) {
+                return 'Memory must be in format like "1Gi", "512Mi", etc.';
+              }
+              
+              const match = v.match(memoryRegex);
+              const num = parseInt(match[1]);
+              const unit = match[2];
+              
+              if (unit === 'Mi' && (num < 128 || num > 32768)) {
+                return 'Memory must be between 128Mi and 32768Mi';
+              }
+              if (unit === 'Gi' && (num < 1 || num > 32)) {
+                return 'Memory must be between 1Gi and 32Gi';
+              }
+              if (unit === 'Ti' && num > 1) {
+                return 'Memory cannot exceed 1Ti';
+              }
+              return true;
+            },
+          ],
+        },
+      ];
     },
 
     onTabChanged({ tab }) {

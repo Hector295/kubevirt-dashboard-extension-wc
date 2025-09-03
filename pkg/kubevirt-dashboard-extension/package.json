@@ -13,7 +13,12 @@
       "catalog.cattle.io/kube-version": ">= v1.26.0-0"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -21,6 +26,12 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "@vitejs/plugin-vue": "^4.6.0",
+    "vitest": "^1.4.0",
+    "jsdom": "^24.0.0",
+    "@vitest/ui": "^1.4.0",
+    "@vitest/coverage-v8": "^1.4.0",
     "cache-loader": "^4.1.0",
     "color": "4.2.3",
     "ip": "2.0.1",

@@ -19,7 +19,8 @@
     "cache-loader": "^4.1.0",
     "color": "4.2.3",
     "ip": "2.0.1",
-    "node-polyfill-webpack-plugin": "^3.0.0"
+    "node-polyfill-webpack-plugin": "^3.0.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "~5.4.0",

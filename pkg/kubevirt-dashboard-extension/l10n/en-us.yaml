@@ -286,7 +286,12 @@ kubevirt:
 
   dashboard:
     label: Dashboard
+    title: Dashboard
     header: 'Harvester Cluster: {cluster}'
+    virtualMachines: Virtual Machines
+    capacity: Capacity
+    hostNodes: Host Nodes
+    activeAlerts: Active Alerts
     hardwareResourceGauge:
       cpu: CPU
       memory: Memory

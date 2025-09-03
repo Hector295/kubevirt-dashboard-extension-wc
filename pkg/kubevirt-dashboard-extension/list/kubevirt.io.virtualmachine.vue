@@ -114,6 +114,33 @@ export default {
       const matchVMIs = this.allVMIs.filter((VMI) => !this.allVMs.find((VM) => VM.id === VMI.id));
       return [...this.allVMs, ...matchVMIs];
     },
+
+    tableActions() {
+      return [
+        {
+          action: 'editVM',
+          label: 'Edit',
+          icon: 'icon icon-edit',
+          enabled: (resource) => resource.type !== 'kubevirt.io.virtualmachineinstance',
+        },
+      ];
+    },
+  },
+
+  methods: {
+    editVM(resource) {
+      // Navigate to edit page for the VM
+      this.$router.push({
+        name: 'c-cluster-product-resource-id',
+        params: {
+          cluster: this.$route.params.cluster,
+          product: 'kubevirt',
+          resource: 'kubevirt.io.virtualmachine',
+          id: resource.id,
+        },
+        query: { mode: 'edit' },
+      });
+    },
   },
 
   //   async created() {
@@ -136,6 +163,7 @@ export default {
       :rows="rows"
       :schema="schema"
       :groupable="true"
+      :table-actions="tableActions"
       key-field="_key"
     >
       <template #cell:state="scope">

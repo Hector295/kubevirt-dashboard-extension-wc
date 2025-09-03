@@ -44,7 +44,9 @@ export default {
         return get(this.value, 'spec.template.spec.domain.cpu.cores') || 1;
       },
       set(newValue) {
-        set(this.value, 'spec.template.spec.domain.cpu.cores', parseInt(newValue));
+        // Allow fractional CPUs
+        const cpuValue = parseFloat(newValue);
+        set(this.value, 'spec.template.spec.domain.cpu.cores', isNaN(cpuValue) ? 1 : cpuValue);
       },
     },
 
@@ -55,17 +57,10 @@ export default {
         return memory.toString().replace(/[A-Za-z]/g, '');
       },
       set(newValue) {
+        const unit = this.memoryUnit || 'Gi';
         if (!newValue || newValue === '') {
-          const path = 'spec.template.spec.domain.memory.guest';
-          const obj = get(this.value, 'spec.template.spec.domain.memory') || {};
-          delete obj.guest;
-          if (Object.keys(obj).length === 0) {
-            set(this.value, 'spec.template.spec.domain.memory', undefined);
-          } else {
-            set(this.value, 'spec.template.spec.domain.memory', obj);
-          }
+          set(this.value, 'spec.template.spec.domain.memory.guest', '');
         } else {
-          const unit = this.memoryUnit || 'Gi';
           set(this.value, 'spec.template.spec.domain.memory.guest', `${newValue}${unit}`);
         }
       },
@@ -162,6 +157,7 @@ export default {
         }
       },
     },
+
   },
 
   methods: {},
@@ -184,8 +180,11 @@ export default {
           type="number"
           :mode="mode"
           label="CPU Cores"
-          tooltip="Number of virtual CPU cores to allocate to the VM"
-          min="1"
+          tooltip="Number of virtual CPU cores (0.1-32) to allocate to the VM"
+          min="0.1"
+          max="32"
+          step="0.1"
+          required
           :rules="rules('spec.template.spec.domain.cpu.cores')"
         />
       </div>
@@ -194,9 +193,11 @@ export default {
           v-model:value="memoryValue"
           type="number"
           :mode="mode"
-          label="Memory (optional)"
-          tooltip="Amount of memory to allocate to the VM"
-          placeholder="Leave empty to use cluster defaults"
+          label="Memory"
+          tooltip="Amount of memory to allocate to the VM (minimum 128Mi recommended)"
+          placeholder="e.g., 1024"
+          min="128"
+          :rules="rules('spec.template.spec.domain.memory.guest')"
         />
       </div>
       <div class="col span-3">

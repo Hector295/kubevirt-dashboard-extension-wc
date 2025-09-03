@@ -7,7 +7,10 @@ import {
 } from './constants';
 
 export function init(plugin: IPlugin, store: any) {
-  const { basicType, product, configureType, weightType } = plugin.DSL(store, PRODUCT_NAME);
+  const { basicType, product, configureType, weightType, virtualType } = plugin.DSL(
+    store,
+    PRODUCT_NAME
+  );
 
   product({
     inStore: 'cluster',
@@ -42,8 +45,17 @@ export function init(plugin: IPlugin, store: any) {
     canYaml: true,
   });
 
+  // Add virtual type for dashboard
+  virtualType({
+    labelKey: 'kubevirt.dashboard.title',
+    name: 'kubevirt-dashboard',
+    route: {
+      name: `${PRODUCT_NAME}-dashboard`,
+    },
+  });
+
   weightType(VM_RESOURCE_NAME, 2, true);
   weightType(VMI_RESOURCE_NAME, 1, true);
 
-  basicType([VM_RESOURCE_NAME, VMI_RESOURCE_NAME]);
+  basicType([VM_RESOURCE_NAME, VMI_RESOURCE_NAME, 'kubevirt-dashboard']);
 }

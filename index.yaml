@@ -1,0 +1,30 @@
+apiVersion: v1
+entries:
+  extension-server:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/display-name: KubeVirt
+      catalog.cattle.io/kube-version: '>= v1.26.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.11.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+      catalog.cattle.io/ui-extensions-version: '>= 3.0.2 < 4.0.0'
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-09-03T12:44:02.569728209-05:00"
+    description: Extension server
+    digest: 9274f070438f97f07a11d1db0db793f36b9bf687f468d357dd47d5a4aef8a0a3
+    home: https://rancher.com
+    icon: https://docs.ranchermanager.rancher.io/img/rancher-logo-horiz-color.svg
+    keywords:
+    - applications
+    - infrastructure
+    name: extension-server
+    type: application
+    urls:
+    - assets/kubevirt-dashboard-extension/extension-server-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-09-03T12:44:02.569089581-05:00"
