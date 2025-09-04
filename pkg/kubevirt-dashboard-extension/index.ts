@@ -8,7 +8,7 @@ export default function (plugin: IPlugin) {
   importTypes(plugin);
 
   // Provide plugin metadata from package.json
-  plugin.metadata = require('./package.json');
+  plugin.metadata = require('/home/hector/WebstormProjects/dashboard-extensions/pkg/kubevirt-dashboard-extension/package.json');
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   plugin.addProduct(require('./product'));
