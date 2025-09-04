@@ -22,14 +22,14 @@ plugin/img/rancher-logo.f190bd21.svg
 plugin/img/rancher-logo.fd684d42.svg
 plugin/img/setup-step-one.7b236b40.svg
 plugin/img/sunglasses.157dca2a.svg
+plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.269.js
+plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.269.js.map
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.37.js
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.37.js.map
-plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.55.js
-plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.55.js.map
+plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.571.js
+plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.571.js.map
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.60.js
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.60.js.map
-plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.915.js
-plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.915.js.map
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.edit.js
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.edit.js.map
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.formatters.js
@@ -40,5 +40,6 @@ plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.list.js
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.list.js.map
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.xterm.js
 plugin/kubevirt-dashboard-extension-303.0.2+up1.3.2.umd.min.xterm.js.map
+plugin/_/_/node_modules/@rancher/shell/assets/images/pl/README.md
 plugin/package.json
 plugin/version-commit.txt
